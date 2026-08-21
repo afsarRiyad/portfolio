@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0a0a0a;
+  --color-foreground: #ffffff;
+  --color-wibify-neon: #ccff00;
+  --color-wibify-gray: #a3a3a3;
+  --color-wibify-border: rgba(255, 255, 255, 0.1);
+  --color-bg-card: #050505;
+  --color-bg-card-alt: #0a0a0a;
+  --color-bg-nav: #0f0f0f;
+  --color-bg-deep: #020202;
+}
+
+:root {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Light mode overrides */
+html.light {
+  --color-background: #f5f5f5;
+  --color-foreground: #111827;
+  --color-wibify-neon: #16a34a;
+  --color-wibify-gray: #6b7280;
+  --color-wibify-border: rgba(0, 0, 0, 0.1);
+  --color-bg-card: #f0f0f0;
+  --color-bg-card-alt: #e5e5e5;
+  --color-bg-nav: #ffffff;
+  --color-bg-deep: #d4d4d4;
+}
+
+body {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: var(--color-wibify-neon);
+  color: #000;
+}
+
