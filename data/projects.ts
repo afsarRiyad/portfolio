@@ -4,7 +4,7 @@ export const projects: Project[] = [
   {
     id: '01',
     slug: 'electro',
-    title: 'Electro',
+    title: 'TechMart',
     type: 'ECOMMERCE',
     year: '2026',
     overview: 'A full-stack e-commerce learning project built with React, MongoDB, and Express.js. This project helped me understand full-stack development, from frontend React components to backend database integration and authentication.',

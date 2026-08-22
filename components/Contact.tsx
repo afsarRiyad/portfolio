@@ -121,7 +121,7 @@ export default function Contact() {
           )}
 
           <form
-            action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+            action="https://formspree.io/f/xdenjdea"
             method="POST"
             onSubmit={handleSubmit}
             className="flex flex-col gap-8 text-sm"
