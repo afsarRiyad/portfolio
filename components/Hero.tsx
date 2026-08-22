@@ -49,7 +49,7 @@ export default function Hero() {
              <div className="space-y-2 text-wibify-gray">
                <div><span className="text-wibify-neon">const</span> developer = {"{"}</div>
                <div className="pl-4">name: <span className="text-foreground">"Riyad"</span>,</div>
-               <div className="pl-4">skills: [<span className="text-foreground">"React"</span>, <span className="text-foreground">"Next.js"</span>, <span className="text-foreground">"Bootstrap"</span>, <span className="text-foreground">"REST API"</span>],</div>
+               <div className="pl-4">skills: [<span className="text-foreground">"React"</span>, <span className="text-foreground">"Next.js"</span>, <span className="text-foreground">"Tailwind CSS"</span>, <span className="text-foreground">"Bootstrap"</span>, <span className="text-foreground">"TanStack Query"</span>, <span className="text-foreground">"Redux"</span>, <span className="text-foreground">"Authentication"</span>, <span className="text-foreground">"Axios"</span>, <span className="text-foreground">"Git"</span>, <span className="text-foreground">"GitHub"</span>, <span className="text-foreground">"Vercel"</span>, <span className="text-foreground">"Render"</span>, <span className="text-foreground">"Figma"</span>, <span className="text-foreground">"Responsive Design"</span>],</div>
                <div className="pl-4">focus: <span className="text-foreground">"Full Stack"</span>,</div>
                <div className="pl-4">location: <span className="text-foreground">"Dhaka, BD"</span></div>
                <div>{"}"};</div>
