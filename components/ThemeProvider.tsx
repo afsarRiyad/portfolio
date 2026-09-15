@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 type Theme = 'dark' | 'light';
 
@@ -21,8 +21,26 @@ function getInitialTheme(): Theme {
   }
 }
 
+const DEFAULT_THEME: Theme = 'dark';
+
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  // Always start from the server-rendered default. Reading localStorage during
+  // the first render would make the client HTML disagree with the server HTML
+  // (the Navbar renders a different icon per theme), which breaks hydration.
+  // The blocking inline script in the root layout has already applied the
+  // correct class before paint, so there is no flash of the wrong theme.
+  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
+  const hasAdoptedStoredTheme = useRef(false);
+
+  // Adopt the visitor's saved theme once mounted. The ref guard keeps the read
+  // to a single occurrence even if effects are re-run (React StrictMode).
+  useEffect(() => {
+    if (hasAdoptedStoredTheme.current) return;
+    hasAdoptedStoredTheme.current = true;
+
+    const stored = getInitialTheme();
+    if (stored !== DEFAULT_THEME) setTheme(stored);
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.remove('light', 'dark');

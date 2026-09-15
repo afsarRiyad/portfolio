@@ -17,7 +17,7 @@
   color: var(--color-foreground);
 }
 
-/* Light mode overrides */
+/* Light mode overrides (applied post-hydration by the ThemeProvider) */
 html.light {
   --color-background: #f5f5f5;
   --color-foreground: #111827;
@@ -28,6 +28,28 @@ html.light {
   --color-bg-card-alt: #e5e5e5;
   --color-bg-nav: #ffffff;
   --color-bg-deep: #d4d4d4;
+}
+
+/*
+ * First-paint theming without an inline script.
+ *
+ * Before the ThemeProvider runs, <html> has no theme class, so the saved
+ * preference is not yet known. Match the operating system's preference in pure
+ * CSS so the very first paint is already correct, then let the explicit
+ * html.light / html.dark rules take over once a choice is applied.
+ */
+@media (prefers-color-scheme: light) {
+  :root:not(.dark):not(.light) {
+    --color-background: #f5f5f5;
+    --color-foreground: #111827;
+    --color-wibify-neon: #16a34a;
+    --color-wibify-gray: #6b7280;
+    --color-wibify-border: rgba(0, 0, 0, 0.1);
+    --color-bg-card: #f0f0f0;
+    --color-bg-card-alt: #e5e5e5;
+    --color-bg-nav: #ffffff;
+    --color-bg-deep: #d4d4d4;
+  }
 }
 
 body {

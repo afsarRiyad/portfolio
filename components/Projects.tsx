@@ -5,11 +5,26 @@ import { RevealContainer, RevealItem } from './Reveal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '@/data/projects';
 
+const VISIBLE_COUNT = 3;
+
 export default function Projects() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
+  };
+
+  const hasMore = projects.length > VISIBLE_COUNT;
+
+  const toggleShowAll = () => {
+    const next = !showAll;
+    setShowAll(next);
+    // Collapse a project that is about to be hidden
+    if (!next && expandedId) {
+      const index = projects.findIndex(p => p.id === expandedId);
+      if (index >= VISIBLE_COUNT) setExpandedId(null);
+    }
   };
 
   return (
@@ -27,11 +42,22 @@ export default function Projects() {
         </RevealItem>
 
         <div className="flex flex-col border-t border-wibify-border group/list">
-          {projects.map((project) => (
-            <RevealItem key={project.id}>
+          {/*
+            Every project stays mounted and the extras are hidden with CSS rather
+            than unmounted. A row that mounts only when the visitor clicks "Show
+            more" has to re-run the reveal animation, and can be left stuck at
+            opacity 0 — keeping it mounted means it is already revealed, so it
+            just appears instantly.
+          */}
+          {projects.map((project, index) => (
+            <RevealItem
+              key={project.id}
+              className={index >= VISIBLE_COUNT && !showAll ? 'hidden' : undefined}
+            >
               <div className="border-b border-wibify-border">
                 {/* Header Row (Clickable) */}
-                <div 
+                <div
+
                   onClick={() => toggleExpand(project.id)}
                   className="group/row relative flex items-center justify-between py-10 md:py-14 cursor-pointer z-10"
                 >
@@ -103,6 +129,31 @@ export default function Projects() {
             </RevealItem>
           ))}
         </div>
+
+        {/* Show more / Show less toggle */}
+        {hasMore && (
+          <RevealItem>
+            <div className="flex justify-center mt-12">
+              <button
+                onClick={toggleShowAll}
+                aria-expanded={showAll}
+                className="group/toggle flex items-center gap-3 border border-wibify-border px-6 py-3 text-xs font-mono uppercase tracking-widest text-wibify-gray hover:border-wibify-neon hover:text-wibify-neon transition-all duration-300"
+              >
+                <motion.span
+                  animate={{ rotate: showAll ? 45 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-base leading-none"
+                >
+                  +
+                </motion.span>
+                {showAll ? 'Show less' : 'Show more'}
+                <span className="opacity-50">
+                  ({showAll ? projects.length : VISIBLE_COUNT}/{projects.length})
+                </span>
+              </button>
+            </div>
+          </RevealItem>
+        )}
         
       </RevealContainer>
     </section>

@@ -1,8 +1,15 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { RevealContainer, RevealItem } from './Reveal';
-import { motion } from 'framer-motion';
 import { useTheme } from './ThemeProvider';
+
+/**
+ * The graph is fetched from our own origin, not hot-linked from the third-party
+ * service, so a slow upstream can never leave the visitor staring at an empty
+ * box. See app/api/contribution-graph/route.ts.
+ */
+const GRAPH_ENDPOINT = '/api/contribution-graph';
+const GITHUB_PROFILE = 'https://github.com/afsarriyad';
 
 interface Repo {
   id: number;
@@ -15,6 +22,7 @@ interface Repo {
 export default function LiveGithub() {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [graphState, setGraphState] = useState<'loading' | 'ready' | 'error'>('loading');
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -49,20 +57,42 @@ export default function LiveGithub() {
              {/* Background Grid - theme-aware */}
              <div className={`absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none ${theme === 'light' ? 'opacity-30' : 'opacity-100'}`}></div>
 
-             <motion.div
-               initial={{ clipPath: 'inset(100% 0 0 0)' }}
-               whileInView={{ clipPath: 'inset(0% 0 0 0)' }}
-               viewport={{ once: true, margin: "-10%" }}
-               transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-               className="w-full flex-1 flex items-center justify-end z-10"
-             >
+             {/*
+               One reveal, not two. This image used to sit behind an extra
+               clip-path wipe on top of the section's own reveal, which meant two
+               independent observers had to fire before the graph appeared.
+             */}
+             <div className="w-full flex-1 flex items-center justify-end z-10">
                <img
-                 src="https://ghchart.rshah.org/ccff00/afsarriyad"
-                 alt="Github Contribution Chart"
-                 className="w-[800px] md:w-[1000px] max-w-none h-auto opacity-80 group-hover:opacity-100 transition-all duration-700"
-                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                 src={GRAPH_ENDPOINT}
+                 alt="GitHub contribution graph for afsarriyad"
+                 loading="lazy"
+                 decoding="async"
+                 onLoad={() => setGraphState('ready')}
+                 onError={() => setGraphState('error')}
+                 className={`w-[800px] md:w-[1000px] max-w-none h-auto opacity-80 group-hover:opacity-100 transition-all duration-700 ${graphState === 'error' ? 'hidden' : ''}`}
                />
-             </motion.div>
+             </div>
+
+             {/* The box is never left blank: progress first, then a way out. */}
+             {graphState !== 'ready' && (
+               <div className="absolute inset-0 z-20 flex items-center justify-center px-6 pointer-events-none">
+                 {graphState === 'loading' ? (
+                   <span className="text-wibify-gray font-mono text-xs uppercase tracking-widest animate-pulse">
+                     Loading contribution graph…
+                   </span>
+                 ) : (
+                   <a
+                     href={GITHUB_PROFILE}
+                     target="_blank"
+                     rel="noreferrer"
+                     className="pointer-events-auto text-wibify-gray font-mono text-xs uppercase tracking-widest hover:text-wibify-neon transition-colors text-center"
+                   >
+                     Live graph unavailable — view on GitHub ↗
+                   </a>
+                 )}
+               </div>
+             )}
 
              <div className="flex justify-between items-center text-wibify-gray font-mono text-xs uppercase border-t border-wibify-border pt-6 mt-6 z-10 bg-[var(--color-bg-card)]">
                <span className="flex items-center gap-2">

@@ -31,7 +31,7 @@ export default function Hero() {
               <span className="relative z-10 group-hover:text-wibify-neon transition-colors duration-300">Start a project →</span>
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-wibify-neon shadow-[0_0_10px_#ccff00]"></div>
             </a>
-            <a href="/resume.pdf" download className="flex items-center gap-3 text-sm text-wibify-gray bg-[var(--color-bg-nav)] border border-wibify-border px-6 py-4 rounded-sm hover:border-wibify-neon hover:text-wibify-neon transition-all duration-300">
+            <a href="/Nurul_Afsar_Riyad_Resume.pdf" download="Nurul_Afsar_Riyad_Resume.pdf" className="flex items-center gap-3 text-sm text-wibify-gray bg-[var(--color-bg-nav)] border border-wibify-border px-6 py-4 rounded-sm hover:border-wibify-neon hover:text-wibify-neon transition-all duration-300">
               <span>Download CV</span>
               <span>↓</span>
             </a>

@@ -1,5 +1,32 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## SEO / canonical URLs
+
+The sitemap, canonical tags and OpenGraph URLs are built from a single origin.
+Set it in your deployment before going live, otherwise Vercel's auto-generated
+deployment URL is used:
+
+```bash
+# .env.local (or Vercel → Settings → Environment Variables)
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+```
+
+Optional verified-search stuff:
+
+```bash
+# Google Search Console (HTML-tag verification content value)
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=abc123...
+```
+
+What ships out of the box:
+
+- `robots.txt` (via `app/robots.ts`) — absolute sitemap link, `noindex` on Vercel preview deployments
+- `sitemap.xml` — homepage + every `/projects/[slug]` case study
+- Per-page canonical, `og:` and `twitter:` tags (project pages use their real screenshot, cropped to 1200×630 via Cloudinary)
+- Generated `opengraph-image` / `twitter-image` cards
+- JSON-LD: `Person` + `WebSite` site-wide, `ProfilePage` on the home page, `SoftwareApplication` + `BreadcrumbList` per project
+- Web app manifest and a `noindex` 404 page
+
 ## Getting Started
 
 First, run the development server:

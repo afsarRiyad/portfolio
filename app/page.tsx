@@ -1,3 +1,5 @@
+import JsonLd from "../components/JsonLd";
+import { homePageSchema } from "@/lib/structured-data";
 import Navbar from "../components/Navbar";
 import FloatingNav from "../components/FloatingNav";
 import Hero from "../components/Hero";
@@ -18,6 +20,7 @@ import BackToTop from "../components/BackToTop";
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground relative">
+      <JsonLd data={homePageSchema()} />
       <Navbar />
       <FloatingNav />
       <Hero />
