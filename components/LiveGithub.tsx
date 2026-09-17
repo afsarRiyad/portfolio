@@ -2,12 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { RevealContainer, RevealItem } from './Reveal';
 import { useTheme } from './ThemeProvider';
-
-/**
- * The graph is fetched from our own origin, not hot-linked from the third-party
- * service, so a slow upstream can never leave the visitor staring at an empty
- * box. See app/api/contribution-graph/route.ts.
- */
 const GRAPH_ENDPOINT = '/api/contribution-graph';
 const GITHUB_PROFILE = 'https://github.com/afsarriyad';
 
@@ -57,11 +51,6 @@ export default function LiveGithub() {
              {/* Background Grid - theme-aware */}
              <div className={`absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none ${theme === 'light' ? 'opacity-30' : 'opacity-100'}`}></div>
 
-             {/*
-               One reveal, not two. This image used to sit behind an extra
-               clip-path wipe on top of the section's own reveal, which meant two
-               independent observers had to fire before the graph appeared.
-             */}
              <div className="w-full flex-1 flex items-center justify-end z-10">
                <img
                  src={GRAPH_ENDPOINT}
@@ -70,7 +59,7 @@ export default function LiveGithub() {
                  decoding="async"
                  onLoad={() => setGraphState('ready')}
                  onError={() => setGraphState('error')}
-                 className={`w-[800px] md:w-[1000px] max-w-none h-auto opacity-80 group-hover:opacity-100 transition-all duration-700 ${graphState === 'error' ? 'hidden' : ''}`}
+                 className={`gpu-layer w-[800px] md:w-[1000px] max-w-none h-auto opacity-80 group-hover:opacity-100 transition-opacity duration-700 ${graphState === 'error' ? 'hidden' : ''}`}
                />
              </div>
 

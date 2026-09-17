@@ -1,20 +1,32 @@
 import React from 'react';
+import Image from 'next/image';
+import Parallax from './Parallax';
+import { RevealContainer, RevealItem } from './Reveal';
 
 export default function Profile() {
   return (
     <section id="profile" className="py-32 px-6 md:px-12 bg-[var(--color-bg-card)] border-t border-wibify-border">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
+      <RevealContainer className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
         
         {/* Profile Image Space */}
-        <div className="w-full md:w-1/3 relative group">
+        <RevealItem className="w-full md:w-1/3 relative group">
           <div className="aspect-[3/4] bg-[var(--color-bg-card-alt)] border border-wibify-border overflow-hidden rounded-sm relative">
+             {/* The portrait is taller than its frame so the scroll-linked drift
+                 has headroom on both ends and never exposes the frame edge. */}
+             <Parallax
+               distance={30}
+               className="absolute inset-0"
+               innerClassName="absolute inset-x-0 -top-[9%] h-[118%]"
+             >
+               <Image
+                 src="/riyad.jpeg"
+                 alt="Nurul Afsar Riyad"
+                 fill
+                 sizes="(max-width: 768px) 100vw, 33vw"
+                 className="object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-[filter,opacity] duration-700"
+               />
+             </Parallax>
              <div className="absolute inset-0 bg-wibify-neon/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
-             {/* Using a placeholder. */}
-             <img
-               src="/riyad.jpeg"
-               alt="Nurul Afsar Riyad"
-               className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
-             />
              <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent z-20">
                 <div className="flex gap-4 text-xs font-mono text-wibify-neon">
                     <span># FRONTEND</span>
@@ -25,10 +37,10 @@ export default function Profile() {
           {/* Decorative Elements */}
           <div className="absolute -right-4 -bottom-4 w-24 h-24 border-r border-b border-wibify-neon/50"></div>
           <div className="absolute -left-4 -top-4 w-8 h-8 border-l border-t border-wibify-gray/50"></div>
-        </div>
+        </RevealItem>
 
         {/* Profile Details */}
-        <div className="w-full md:w-2/3">
+        <RevealItem className="w-full md:w-2/3">
           <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-4">
             Nurul Afsar <span className="text-wibify-neon italic font-serif">Riyad.</span>
           </h2>
@@ -54,9 +66,9 @@ export default function Profile() {
               <div className="text-xs font-mono text-wibify-gray uppercase tracking-widest">→ Full Stack</div>
             </div>
           </div>
-        </div>
+        </RevealItem>
 
-      </div>
+      </RevealContainer>
     </section>
   );
 }

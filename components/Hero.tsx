@@ -1,16 +1,29 @@
 "use client";
 import React from 'react';
+import Parallax from './Parallax';
+import { RevealContainer, RevealItem } from './Reveal';
 
+/**
+ * Hero layers are scroll-linked rather than one-shot.
+ */
 export default function Hero() {
   return (
     <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 pt-20 relative overflow-hidden">
       {/* Background Ambient Glow */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-wibify-neon/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+
+      <Parallax
+        direction="down"
+        anchor="start"
+        distance={70}
+        offset={['start start', 'end start']}
+        className="absolute inset-y-0 right-0 flex items-center pointer-events-none -z-10"
+        innerClassName="w-[800px] h-[800px] bg-wibify-neon/5 blur-[120px] rounded-full"
+      />
       
-      <div className="flex flex-col lg:flex-row justify-between items-center relative z-10 w-full h-full mt-10">
+      <RevealContainer className="flex flex-col lg:flex-row justify-between items-center relative z-10 w-full h-full mt-10">
         
         {/* Left Side: Text Area */}
-        <div className="w-full lg:w-[60%] flex flex-col justify-center pointer-events-auto z-20">
+        <RevealItem className="w-full lg:w-[60%] flex flex-col justify-center pointer-events-auto z-20">
           <div className="flex items-center gap-4 mb-8 text-wibify-gray text-xs tracking-[0.2em] uppercase">
             <span className="w-8 h-[1px] bg-wibify-gray"></span>
             [01] Nurul Afsar Riyad — Portfolio
@@ -36,11 +49,17 @@ export default function Hero() {
               <span>↓</span>
             </a>
           </div>
-        </div>
+        </RevealItem>
 
         {/* Right Side: Code/Development Visual - Hidden on mobile */}
-        <div className="hidden lg:flex absolute right-0 top-0 lg:relative lg:w-[40%] h-full lg:h-[80vh] justify-center lg:justify-start items-center z-10 pointer-events-auto lg:-ml-12">
-           <div className="w-full max-w-[500px] bg-[var(--color-bg-card-alt)] border border-wibify-border rounded-sm p-6 opacity-80 font-mono text-xs md:text-sm">
+        <RevealItem className="hidden lg:flex absolute right-0 top-0 lg:relative lg:w-[40%] h-full lg:h-[80vh] justify-center lg:justify-start items-center z-10 pointer-events-auto lg:-ml-12">
+           <Parallax
+             anchor="start"
+             distance={45}
+             offset={['start start', 'end start']}
+             className="w-full max-w-[500px]"
+             innerClassName="bg-[var(--color-bg-card-alt)] border border-wibify-border rounded-sm p-6 opacity-80 font-mono text-xs md:text-sm"
+           >
              <div className="flex gap-2 mb-4">
                <div className="w-3 h-3 rounded-full bg-red-500"></div>
                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -55,26 +74,26 @@ export default function Hero() {
                <div>{"}"};</div>
                <div className="mt-4"><span className="text-wibify-neon">export default</span> developer;</div>
              </div>
-           </div>
-        </div>
+           </Parallax>
+        </RevealItem>
 
-      </div>
+      </RevealContainer>
       
       {/* Bottom Stats Bar */}
-      <div className="mt-auto mb-10 flex flex-wrap gap-12 text-xs font-mono text-wibify-gray border-t border-wibify-border/50 pt-8 w-full z-20 relative">
-        <div className="flex items-center gap-3">
+      <RevealContainer className="mt-auto mb-10 flex flex-wrap gap-12 text-xs font-mono text-wibify-gray border-t border-wibify-border/50 pt-8 w-full z-20 relative">
+        <RevealItem className="flex items-center gap-3">
           <span className="bg-wibify-neon/10 text-wibify-neon p-1 rounded-sm">★</span>
           SELF-TAUGHT DEVELOPER
-        </div>
-        <div className="flex items-center gap-3">
+        </RevealItem>
+        <RevealItem className="flex items-center gap-3">
           <span className="text-wibify-neon border border-wibify-neon/30 p-1 rounded-sm">✦</span>
           FRONTEND → FULL STACK
-        </div>
-        <div className="flex items-center gap-3">
+        </RevealItem>
+        <RevealItem className="flex items-center gap-3">
           <span className="text-wibify-neon border border-wibify-neon/30 p-1 rounded-sm">⚡</span>
           REACT, NEXT.JS, MONGODB, EXPRESS
-        </div>
-      </div>
+        </RevealItem>
+      </RevealContainer>
     </section>
   );
 }

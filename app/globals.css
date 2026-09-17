@@ -56,6 +56,39 @@ body {
   scroll-behavior: smooth;
 }
 
+/*
+ * Promote an essentially-static, expensive-to-rasterise layer (a blur wash, a
+ * big filtered image) to its own composited layer, so scrolling moves it rather
+ * than re-rasterising the filter/blend every frame.
+ *
+ * Deliberately opt-in per element instead of a blanket `will-change` rule: an
+ * always-on hint for every element costs memory and can make scrolling worse.
+ * Never put this on an element that framer-motion animates — the inline
+ * transform it writes replaces `translateZ(0)`.
+ */
+.gpu-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/*
+ * Reduced motion: kill the looping ambient animations (pulse dots, shimmers) and
+ * smooth scrolling. The scroll-linked layers already render statically because
+ * Parallax/useReducedMotion bails out.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
 ::selection {
   background-color: var(--color-wibify-neon);
   color: #000;

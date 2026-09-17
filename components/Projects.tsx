@@ -42,13 +42,6 @@ export default function Projects() {
         </RevealItem>
 
         <div className="flex flex-col border-t border-wibify-border group/list">
-          {/*
-            Every project stays mounted and the extras are hidden with CSS rather
-            than unmounted. A row that mounts only when the visitor clicks "Show
-            more" has to re-run the reveal animation, and can be left stuck at
-            opacity 0 — keeping it mounted means it is already revealed, so it
-            just appears instantly.
-          */}
           {projects.map((project, index) => (
             <RevealItem
               key={project.id}

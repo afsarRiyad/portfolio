@@ -4,7 +4,6 @@ import { projects } from '@/data/projects';
 
 /**
  * Static export, so the build time is a fair "last modified" signal for the
- * project pages (their content lives in code and changes on deploy).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();

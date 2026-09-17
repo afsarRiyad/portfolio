@@ -1,6 +1,8 @@
 "use client";
 import React from 'react';
+import Image from 'next/image';
 import { RevealContainer, RevealItem } from './Reveal';
+import Parallax from './Parallax';
 
 export default function Workspace() {
   return (
@@ -25,11 +27,19 @@ export default function Workspace() {
                    REMOTE READY
                 </div>
               </div>
-              <img 
-                src="https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&q=80&w=1200" 
-                alt="Workspace"
-                className="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
-              />
+              <Parallax
+                distance={22}
+                className="absolute inset-0"
+                innerClassName="absolute inset-x-0 -top-[12.5%] h-[125%]"
+              >
+                <Image
+                  src="https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&q=80&w=1200"
+                  alt="Workspace"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-[filter,opacity] duration-700"
+                />
+              </Parallax>
               <div className="absolute bottom-6 right-6 z-10 text-wibify-neon font-mono text-xs uppercase bg-[var(--color-bg-card)]/80 backdrop-blur-sm px-4 py-2 border border-wibify-neon/30">
                 ◼ INSIDE SETUP - 01
               </div>

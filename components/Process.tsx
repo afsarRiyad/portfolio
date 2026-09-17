@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { useTheme } from './ThemeProvider';
+import { RevealContainer, RevealItem } from './Reveal';
 
 const steps = [
   {
@@ -38,17 +39,26 @@ export default function Process() {
 
   return (
     <section className="py-32 px-6 md:px-12 bg-background border-t border-wibify-border relative">
-      <div className="text-wibify-gray text-xs tracking-[0.2em] uppercase mb-12">
-        [04] Process / How I work
-      </div>
-      <h2 className="text-5xl md:text-7xl lg:text-[8vw] font-bold tracking-tighter mb-20 leading-none">
-        From logic to <span className="text-wibify-neon italic font-serif">execution.</span>
-      </h2>
+      {/*
+        Only the heading is wrapped in a reveal: the step cards below are
+        `position: sticky`, and a transform on an ancestor changes the box they
+        stick within — so the steps keep animating on hover instead of on scroll.
+      */}
+      <RevealContainer>
+        <RevealItem className="text-wibify-gray text-xs tracking-[0.2em] uppercase mb-12">
+          [04] Process / How I work
+        </RevealItem>
+        <RevealItem>
+          <h2 className="text-5xl md:text-7xl lg:text-[8vw] font-bold tracking-tighter mb-20 leading-none">
+            From logic to <span className="text-wibify-neon italic font-serif">execution.</span>
+          </h2>
+        </RevealItem>
+      </RevealContainer>
       <div className="relative w-full max-w-7xl mx-auto pb-32">
         {steps.map((step, index) => (
           <div 
             key={index}
-            className="sticky w-full bg-[var(--color-bg-card-alt)] border-t border-x border-wibify-border flex flex-col md:flex-row shadow-[0_-10px_30px_rgba(0,0,0,0.5)] transition-all duration-300 rounded-t-xl overflow-hidden group"
+            className="sticky w-full bg-[var(--color-bg-card-alt)] border-t border-x border-wibify-border flex flex-col md:flex-row shadow-[0_-10px_30px_rgba(0,0,0,0.5)] transition-shadow duration-300 rounded-t-xl overflow-hidden group"
             style={{ 
               top: `calc(15vh + ${index * 40}px)`, 
               height: '70vh',
@@ -57,11 +67,11 @@ export default function Process() {
           >
             <div className="hidden lg:flex w-1/2 bg-[var(--color-bg-deep)] border-r border-wibify-border items-center justify-center relative overflow-hidden">
                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-               <div className="absolute w-64 h-64 bg-wibify-neon/10 blur-[100px] rounded-full group-hover:bg-wibify-neon/10 transition-colors duration-700"></div>
+               <div className="gpu-layer absolute w-64 h-64 bg-wibify-neon/10 blur-[100px] rounded-full"></div>
                <img 
                  src={step.img} 
                  alt={step.title}
-                 className={`w-full h-full object-contain p-12 relative z-10 opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out ${theme === 'dark' ? 'mix-blend-screen' : 'mix-blend-multiply'}`}
+                 className={`w-full h-full object-contain p-12 relative z-10 opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-[opacity,transform] duration-700 ease-out ${theme === 'dark' ? 'mix-blend-screen' : 'mix-blend-multiply'}`}
                  onError={(e) => {
                    e.currentTarget.style.display = 'none';
                  }}

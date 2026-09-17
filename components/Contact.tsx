@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { RevealContainer, RevealItem } from './Reveal';
 
 export default function Contact() {
   const [formStatus, setFormStatus] = useState('idle');
@@ -36,10 +37,10 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-32 px-6 md:px-12 bg-background border-t border-wibify-border">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
+      <RevealContainer className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
         
         {/* Left Side: Contact Info & Highlighted Text */}
-        <div>
+        <RevealItem>
           <div className="text-wibify-gray text-xs tracking-[0.2em] uppercase mb-6 flex items-center gap-4">
             <span className="w-4 h-[1px] bg-wibify-gray"></span>
             [06] CONTACT
@@ -92,10 +93,10 @@ export default function Contact() {
               </div>
             </div>
           </div>
-        </div>
+        </RevealItem>
 
         {/* Right Side: The Briefing Form */}
-        <div className="bg-[var(--color-bg-card)] border border-wibify-border p-8 md:p-12 rounded-sm relative">
+        <RevealItem className="bg-[var(--color-bg-card)] border border-wibify-border p-8 md:p-12 rounded-sm relative">
            <div className="text-wibify-neon font-mono text-xs tracking-widest uppercase mb-4">
             Briefing
           </div>
@@ -170,9 +171,9 @@ export default function Contact() {
               Send request →
             </button>
           </form>
-        </div>
+        </RevealItem>
 
-      </div>
+      </RevealContainer>
     </section>
   );
 }

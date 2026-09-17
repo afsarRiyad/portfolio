@@ -14,13 +14,14 @@ import Faq from "../components/Faq";
 import Contact from "../components/Contact";
 import TechStack from "../components/TechStack";
 import Footer from "../components/Footer";
-import ScrollReveal from "../components/ScrollReveal";
+import ScrollProgress from "../components/ScrollProgress";
 import BackToTop from "../components/BackToTop";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground relative">
       <JsonLd data={homePageSchema()} />
+      <ScrollProgress />
       <Navbar />
       <FloatingNav />
       <Hero />
@@ -30,23 +31,13 @@ export default function Home() {
       <Process />
       <Workspace />
       
-      {/* Naya Advanced Stagger Animations lag gaye hain! */}
+      {/* new Advanced Stagger Animations ! */}
       <Results />
       <LiveGithub />
 
-      {/* Basic Pop Animations for the rest */}
-      <ScrollReveal>
-        <Faq />
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <Contact />
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <TechStack />
-      </ScrollReveal>
-
+      <Faq />
+      <Contact />
+      <TechStack />
       <Footer />
       <BackToTop />
     </main>

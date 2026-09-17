@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useEffect, useRef } from 'react';
-import { motion, useInView, useAnimation, type Variants } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { motion, useAnimation, type Variants } from 'framer-motion';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -22,63 +22,128 @@ const itemVariants: Variants = {
   },
 };
 
-export function RevealContainer({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+
+type RevealEntry = {
+  node: HTMLElement | null;
+  /** A one-shot entry leaves the driver after it reveals. */
+  once: boolean;
+  update: (visible: boolean, settled: boolean) => void;
+};
+
+const RESET_MARGIN = 64;
+
+const entries = new Set<RevealEntry>();
+let frame = 0;
+let listening = false;
+
+function scheduleCheck() {
+  if (frame) return;
+  frame = window.requestAnimationFrame(checkVisibility);
+}
+
+function startListening() {
+  if (listening) return;
+  listening = true;
+  window.addEventListener('scroll', scheduleCheck, { passive: true });
+  window.addEventListener('resize', scheduleCheck);
+  window.addEventListener('focus', scheduleCheck);
+  document.addEventListener('visibilitychange', scheduleCheck);
+}
+
+function stopListening() {
+  if (!listening) return;
+  listening = false;
+  window.removeEventListener('scroll', scheduleCheck);
+  window.removeEventListener('resize', scheduleCheck);
+  window.removeEventListener('focus', scheduleCheck);
+  document.removeEventListener('visibilitychange', scheduleCheck);
+}
+
+function checkVisibility() {
+  frame = 0;
+  if (entries.size === 0) {
+    stopListening();
+    return;
+  }
+
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const states: Array<{ entry: RevealEntry; visible: boolean; settled: boolean }> = [];
+  const stale: RevealEntry[] = [];
+
+  // Phase 1 — layout reads only. Interleaving reads and writes here is what
+  // turned every scroll event into a forced synchronous layout per section.
+  entries.forEach((entry) => {
+    const node = entry.node;
+    if (!node || !node.isConnected) {
+      stale.push(entry);
+      return;
+    }
+    const rect = node.getBoundingClientRect();
+    states.push({
+      entry,
+      visible: rect.top < viewportHeight && rect.bottom > 0,
+      settled: rect.bottom < -RESET_MARGIN || rect.top > viewportHeight + RESET_MARGIN,
+    });
+  });
+
+  // Phase 2 — writes.
+  stale.forEach((entry) => entries.delete(entry));
+  states.forEach(({ entry, visible, settled }) => {
+    entry.update(visible, settled);
+    if (entry.once && visible) entries.delete(entry);
+  });
+
+  if (entries.size === 0) stopListening();
+}
+
+/** Register an element with the shared driver.* which is what lets every scroll play the reveal again.*/
+function registerReveal(entry: RevealEntry) {
+  entries.add(entry);
+  startListening();
+  // Check immediately (the element may already be on screen at mount, which is
+  // how above-the-fold content like the hero plays its entrance)…
+  scheduleCheck();
+  // …and once more shortly after, for a tab that was hidden during mount and
+  // therefore never ran the animation frame.
+  const timer = window.setTimeout(scheduleCheck, 800);
+  return () => {
+    window.clearTimeout(timer);
+    entries.delete(entry);
+    if (entries.size === 0) stopListening();
+  };
+}
+
+export function RevealContainer({
+  children,
+  className = "",
+  once = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  once?: boolean;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-
-  /**
-   * `amount: 'some'` instead of a ratio, deliberately.
-   *
-   * A ratio threshold is measured against the *container*, so a section taller
-   * than the viewport can never satisfy it — no matter how far the visitor
-   * scrolls, the ratio stays below the threshold and the section stays at
-   * opacity 0 forever. `'some'` fires as soon as any part of the section is on
-   * screen, which is true for every viewport height.
-   *
-   * `once: true` means a section that has been revealed can never fall back to
-   * hidden. Re-hiding on the way back up is a bug factory: anything that
-   * interrupts the reveal leaves permanently invisible content.
-   */
-  const isInView = useInView(ref, { once: true, amount: 'some' });
+  const revealed = useRef(false);
 
   useEffect(() => {
-    if (isInView) controls.start('show');
-  }, [isInView, controls]);
-
-  /**
-   * Safety net.
-   *
-   * Browsers defer IntersectionObserver callbacks while a tab is hidden or
-   * occluded, and the reveal is otherwise the *only* thing standing between the
-   * visitor and content that is baked into the HTML at `opacity: 0`. So if the
-   * element is genuinely on screen but the observer has not reported it, reveal
-   * it anyway. Cheap, and it only fires when the element actually intersects
-   * the viewport, so off-screen sections still animate normally.
-   */
-  const revealIfOnScreen = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) controls.start('show');
-  }, [controls]);
-
-  useEffect(() => {
-    // Run once after mount in case the observer never delivers.
-    const timer = window.setTimeout(revealIfOnScreen, 600);
-
-    window.addEventListener('scroll', revealIfOnScreen, { passive: true });
-    window.addEventListener('resize', revealIfOnScreen);
-    window.addEventListener('focus', revealIfOnScreen);
-    document.addEventListener('visibilitychange', revealIfOnScreen);
-
-    return () => {
-      window.clearTimeout(timer);
-      window.removeEventListener('scroll', revealIfOnScreen);
-      window.removeEventListener('resize', revealIfOnScreen);
-      window.removeEventListener('focus', revealIfOnScreen);
-      document.removeEventListener('visibilitychange', revealIfOnScreen);
-    };
-  }, [revealIfOnScreen]);
+    return registerReveal({
+      node: ref.current,
+      once,
+      update: (visible, settled) => {
+        if (visible) {
+          if (revealed.current) return;
+          revealed.current = true;
+          controls.start('show');
+          return;
+        }
+        if (!once && settled && revealed.current) {
+          revealed.current = false;
+          controls.set('hidden');
+        }
+      },
+    });
+  }, [controls, once]);
 
   return (
     <motion.div
@@ -93,9 +158,9 @@ export function RevealContainer({ children, className = "" }: { children: React.
   );
 }
 
-export function RevealItem({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+export function RevealItem({ children, className = "", ...rest }: React.ComponentProps<typeof motion.div>) {
   return (
-    <motion.div variants={itemVariants} className={className}>
+    <motion.div variants={itemVariants} className={className} {...rest}>
       {children}
     </motion.div>
   );

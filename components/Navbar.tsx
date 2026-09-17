@@ -19,7 +19,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 w-full z-[999] flex items-center justify-between px-6 md:px-12 py-6 pointer-events-none">
-        <div className={`flex items-center gap-2 pointer-events-auto ${theme === 'dark' ? 'mix-blend-difference' : ''} text-foreground`}>
+        <div className="flex items-center gap-2 pointer-events-auto text-foreground">
           <div className="text-wibify-neon font-bold text-3xl tracking-tighter">
             N.
           </div>
@@ -32,7 +32,9 @@ export default function Navbar() {
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
-          <Link href="#contact" className="hidden md:block text-sm border border-wibify-border px-4 py-2 rounded hover:bg-wibify-neon hover:text-black transition-all duration-300 bg-[var(--color-bg-card)]/50 backdrop-blur-sm">
+          {/* Solid fill instead of `backdrop-blur-sm`: a backdrop filter on a
+              fixed element repaints its region on every scroll frame. */}
+          <Link href="#contact" className="hidden md:block text-sm border border-wibify-border px-4 py-2 rounded hover:bg-wibify-neon hover:text-black transition-colors duration-300 bg-[var(--color-bg-card)]">
             Contact Me →
           </Link>
           <button onClick={() => setIsOpen(!isOpen)} className="border border-wibify-border p-2 rounded hover:bg-wibify-neon hover:text-black transition-all duration-300 bg-[var(--color-bg-card)] text-foreground cursor-pointer">
@@ -41,7 +43,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      <div className={`fixed inset-0 bg-[var(--color-bg-card)] z-[998] transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] flex flex-col justify-center px-6 md:px-24 ${
+      <div className={`fixed inset-0 bg-[var(--color-bg-card)] z-[998] transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] flex flex-col justify-center px-6 md:px-24 ${
           isOpen ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-full opacity-0 pointer-events-none'
         }`}>
         <div className="flex flex-col gap-4 text-6xl md:text-[8vw] font-bold tracking-tighter leading-none">

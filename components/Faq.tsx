@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
+import { RevealContainer, RevealItem } from './Reveal';
 
 const faqs = [
   {
@@ -34,23 +35,25 @@ export default function Faq() {
 
   return (
     <section className="py-32 px-6 md:px-12 bg-background border-t border-wibify-border">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-wibify-gray text-xs tracking-[0.2em] uppercase mb-12 flex items-center gap-4">
+      <RevealContainer className="max-w-4xl mx-auto">
+        <RevealItem className="text-wibify-gray text-xs tracking-[0.2em] uppercase mb-12 flex items-center gap-4">
           <span className="w-4 h-[1px] bg-wibify-gray"></span>
           [FAQ] FREQUENTLY ASKED
-        </div>
-        
-        <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">
-          Answers up <span className="text-wibify-neon italic font-serif">front.</span>
-        </h2>
-        <p className="text-wibify-gray text-lg mb-16 max-w-xl font-light">
-          Six answers that make briefing calls shorter — clearing the friction before we start.
-        </p>
+        </RevealItem>
+
+        <RevealItem>
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">
+            Answers up <span className="text-wibify-neon italic font-serif">front.</span>
+          </h2>
+          <p className="text-wibify-gray text-lg mb-16 max-w-xl font-light">
+            Six answers that make briefing calls shorter — clearing the friction before we start.
+          </p>
+        </RevealItem>
 
         <div className="flex flex-col border-t border-wibify-border">
           {faqs.map((faq, index) => (
-            <div 
-              key={index} 
+            <RevealItem
+              key={index}
               className="border-b border-wibify-border py-8 cursor-pointer group"
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
@@ -76,10 +79,10 @@ export default function Faq() {
                   </p>
                 </div>
               </div>
-            </div>
+            </RevealItem>
           ))}
         </div>
-      </div>
+      </RevealContainer>
     </section>
   );
 }

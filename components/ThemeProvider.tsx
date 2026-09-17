@@ -24,11 +24,6 @@ function getInitialTheme(): Theme {
 const DEFAULT_THEME: Theme = 'dark';
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Always start from the server-rendered default. Reading localStorage during
-  // the first render would make the client HTML disagree with the server HTML
-  // (the Navbar renders a different icon per theme), which breaks hydration.
-  // The blocking inline script in the root layout has already applied the
-  // correct class before paint, so there is no flash of the wrong theme.
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
   const hasAdoptedStoredTheme = useRef(false);
 

@@ -112,7 +112,7 @@ export const projects: Project[] = [
     link: 'https://github.com/afsarRiyad/football-club-frontend',
     githubUrl: 'https://github.com/afsarRiyad/football-club-frontend',
     liveUrl: 'https://www.nayadiganta.club/',
-    duration: '4 months',
+    duration: '20 days',
     screenshots: [
       'https://res.cloudinary.com/dj5ogudnj/image/upload/v1789408697/Screenshot_2026-09-14_231007_hretxo.png',
       'https://res.cloudinary.com/dj5ogudnj/image/upload/v1789408697/Screenshot_2026-09-14_231117_mitecj.png',

@@ -1,10 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { siteConfig } from '@/lib/site';
 
-/**
- * Vercel preview deployments are marked noindex so they can never compete with
- * the production domain in search results. Production stays fully crawlable.
- */
 const isPreviewDeployment =
   process.env.VERCEL_ENV !== undefined && process.env.VERCEL_ENV !== 'production';
 
